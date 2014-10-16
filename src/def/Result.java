@@ -3,7 +3,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 public class Result implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private static int totalResults;
+	private transient static int totalResults;
 	private int resultNumber; //effectively Id
 	private Algorithm algo;
 	private Double cTime; //how much time taken
@@ -19,8 +19,10 @@ public class Result implements Serializable{
 			this.dataset=dataset;
 			this.cTime=cTime;
 			this.date = Calendar.getInstance().getTime().toString();
-			this.resultNumber = totalResults;
-			totalResults+=1;
+			
+			Main.getResourceHandler().getCounter().addResult();			
+			this.resultNumber = Main.getResourceHandler().getCounter().getResultsNumber();
+	
 			
 		}
 		
@@ -30,8 +32,8 @@ public class Result implements Serializable{
 			this.dataset=dataset;
 			this.cTime=cTime;
 			this.date = Calendar.getInstance().getTime().toString();
-			this.resultNumber = totalResults;
-			totalResults+=1;
+			Main.getResourceHandler().getCounter().addResult();			
+			this.resultNumber = Main.getResourceHandler().getCounter().getResultsNumber();
 		}
 		
 		public HadoopConfiguration getHadoopConfiguration(){

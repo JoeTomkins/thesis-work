@@ -27,6 +27,7 @@ import def.Parameter;
 import def.ResourceHandler;
 
 public class AlgorithmPanel extends JPanel implements ActionListener{
+	
 	private static final AbstractButton idTf = null;
 	JLabel number = new JLabel("Algorithm #");
 	JLabel total = new JLabel(" / ");
@@ -68,7 +69,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 	JTextField defaultValueTf = new JTextField();
 	
 	private boolean isNewAlgorithm = false;
-	
+	private boolean isNewArgument = false;
 
 	JButton saveArgument = new JButton("Save");
 	JButton addArgument = new JButton("Add");
@@ -106,6 +107,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 	
 	
 	public AlgorithmPanel(boolean isRunPanel){
+		
 		this.isRunPanel = isRunPanel;
 		algorithmPanel = new JPanel();
 		GroupLayout layout = new GroupLayout(algorithmPanel);
@@ -150,7 +152,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 					.addComponent(argumentTf)
 					.addComponent(descriptionTf)
 					.addComponent(defaultValueTf)
-					.addComponent(ret))					
+					.addComponent(delete))					
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 					.addGroup(layout.createSequentialGroup()
 						
@@ -170,7 +172,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 					.addComponent(editDefaultValue)
 					.addComponent(saveDefaultValue)
 					.addComponent(cancel)
-					.addComponent(delete))
+					.addComponent(ret))
 		);
 		layout.linkSize(SwingConstants.HORIZONTAL, prev, next);
 		
@@ -236,6 +238,8 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 		add(algorithmPanel);
 		cancelArgument.setVisible(false);
 		cancelArgument.addActionListener(this);
+		moveArgumentUp.addActionListener(this);
+		moveArgumentDown.addActionListener(this);
 		filePathButton.setVisible(false);
 		if (isRunPanel){
 			dataPanel = new DataPanel();
@@ -343,13 +347,13 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 			
 		}
 		else if (e.getSource().equals(argumentBox)){
-			currentArgNum = argumentBox.getSelectedIndex();
+			currentArgNum = argumentBox.getSelectedIndex();			
 			updateArgumentDetails();
 		}
 		
 		else if (e.getSource().equals(addArgument)){
 			if (totalAlgorithms>0 || isNewAlgorithm){
-				
+				isNewArgument=true;
 				saveArgument.setVisible(true);
 				addArgument.setVisible(false);
 				cancelArgument.setVisible(true);
@@ -362,6 +366,15 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 				defaultValueTf.setText("");
 				argumentTf.setText("");
 				prefixTf.setText("");
+				
+				prefixTf.setEditable(true);
+				descriptionTf.setEditable(true);
+				defaultValueTf.setEditable(true);
+				
+				editPrefix.setVisible(false);
+				editDescription.setVisible(false);
+				editDefaultValue.setVisible(false);
+				
 			}
 		}
 		else if (e.getSource().equals(saveArgument)){
@@ -376,6 +389,14 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 			cancelArgument.setVisible(false);
 			moveArgumentUp.setVisible(true);
 			moveArgumentDown.setVisible(true);
+			
+			prefixTf.setEditable(false);
+			descriptionTf.setEditable(false);
+			defaultValueTf.setEditable(false);
+			
+			editPrefix.setVisible(true);
+			editDescription.setVisible(true);
+			editDefaultValue.setVisible(true);
 			
 		}
 		else if (e.getSource().equals(cancelArgument)){
@@ -396,6 +417,15 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 				argumentTf.setText("");
 				prefixTf.setText("");
 			}
+			
+			prefixTf.setEditable(false);
+			descriptionTf.setEditable(false);
+			defaultValueTf.setEditable(false);
+			
+			editPrefix.setVisible(true);
+			editDescription.setVisible(true);
+			editDefaultValue.setVisible(true);
+			
 		}
 		else if (e.getSource().equals(filePathButton)){
 			File f = FileSetUp.getFilepath("Select filepath to Algorithm", false);
@@ -407,11 +437,15 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 		else if (e.getSource().equals(delete)){
 			if (totalAlgorithms>0){
 				ResourceHandler.removeAlgorithm(currentAlgNum);
+				
 				initialise();
 			}
 		}
 		
 		else if (e.getSource().equals(saveDescription)){
+			if (isNewArgument){
+				return;
+			}
 			saveDescription.setVisible(false);
 			editDescription.setVisible(true);
 			descriptionTf.setEditable(false);
@@ -439,6 +473,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 			}
 		}
 		else if (e.getSource().equals(savePrefix)){
+			if (isNewArgument){
+				return;
+			}
 			savePrefix.setVisible(false);
 			editPrefix.setVisible(true);
 			prefixTf.setEditable(false);
@@ -458,6 +495,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 			}
 		}
 		else if (e.getSource().equals(saveDefaultValue)){
+			if (isNewArgument){
+				return;
+			}
 			saveDefaultValue.setVisible(false);
 			editDefaultValue.setVisible(true);
 			defaultValueTf.setEditable(false);
@@ -470,6 +510,34 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 			}
 		}
 		
+		else if (e.getSource().equals(moveArgumentUp)){
+			if (totalAlgorithms>0){
+				if (argumentBox.getItemCount()>1){
+					if (currentArgNum<(argumentBox.getItemCount()-1)){
+						algorithmList.get(currentAlgNum).swapParameter(currentArgNum, currentArgNum+1);
+						updateArguments(algorithmList.get(currentAlgNum));
+						argumentBox.setSelectedIndex(currentArgNum+1);
+						Main.getResourceHandler().writeAlgorithms();
+					}
+				}
+			}
+		}
+		else if (e.getSource().equals(moveArgumentDown)){
+			if (totalAlgorithms>0){
+				if (argumentBox.getItemCount()>1){
+					if (currentArgNum>0){
+						algorithmList.get(currentAlgNum).swapParameter(currentArgNum-1, currentArgNum);
+						updateArguments(algorithmList.get(currentAlgNum));
+						argumentBox.setSelectedIndex(currentArgNum-1);
+						Main.getResourceHandler().writeAlgorithms();
+					}
+				}
+			}
+			
+
+			
+		}
+		
 			
 		
 	}
@@ -478,39 +546,54 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 	
 	private void updateArguments(Algorithm a){
 		if (a.getArguments()!=null){
-			if (argumentBox == null){
-				arguments = new String[a.getArguments().size()];
-				for (int i=0; i< arguments.length; i++){
-					arguments[i] = ((Parameter) a.getArguments().get(i)).getName();
+			if (a.getArguments().size()>0){
+				if (argumentBox == null){
+					arguments = new String[a.getArguments().size()];
+					for (int i=0; i< arguments.length; i++){
+						arguments[i] = ((Parameter) a.getArguments().get(i)).getName();
+					}
+					argumentBox = new JComboBox<String>(arguments);
+						
 				}
-				argumentBox = new JComboBox<String>(arguments);
-					
-			}
-			else{
-				argumentBox.removeAllItems();
-				for (int i = 0; i<a.getArguments().size(); i++ ){
-					argumentBox.addItem(((Parameter) a.getArguments().get(i)).getName());
+				else{
+					argumentBox.removeAllItems();
+					for (int i = 0; i<a.getArguments().size(); i++ ){
+						argumentBox.addItem(((Parameter) a.getArguments().get(i)).getName());
+					}
 				}
-			}
-			if(argumentBox.getItemCount()>0){
-				updateArgumentDetails();
+				
+				
+				if(argumentBox.getItemCount()>0){
+					updateArgumentDetails();
+				}
 			}
 		}
 	}
 	
 	private void updateArgumentDetails(){
+		if (argumentBox.getSelectedIndex() == -1){
+			return;
+		}
+		
 		if (!isNewAlgorithm){
 			descriptionTf.setText(((Parameter)algorithmList.get(currentAlgNum).getArguments().get(argumentBox.getSelectedIndex())).getDescription());
 			prefixTf.setText(((Parameter)algorithmList.get(currentAlgNum).getArguments().get(argumentBox.getSelectedIndex())).getPrefix());
 			defaultValueTf.setText(((Parameter)algorithmList.get(currentAlgNum).getArguments().get(argumentBox.getSelectedIndex())).getValue());
-
+			
+		}
+		else{
+			if (tempAlgorithm.getArguments().size()>0){
+				descriptionTf.setText(tempAlgorithm.getArguments().get(argumentBox.getSelectedIndex()).getDescription());
+				prefixTf.setText(tempAlgorithm.getArguments().get(argumentBox.getSelectedIndex()).getPrefix());
+				defaultValueTf.setText(tempAlgorithm.getArguments().get(argumentBox.getSelectedIndex()).getValue());
+			}
 		}
 		//bit of a long line here -> basically get the parameters from the current algorithm chosen (indexed) -> get the description from the currently selected argument.
 	}
 	
 	private void create(){
 		tempAlgorithm = new Algorithm("");
-		tempParameters = new ArrayList<Parameter>();
+		
 		isNewAlgorithm=true;
 		newAlgorithm.setVisible(false);		
 		filePathButton.setVisible(true);
@@ -523,6 +606,9 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 		nameTf.setText("");
 		filepathTf.setText("");
 		algorithmIDTf.setText("");
+		prefixTf.setText("");
+		defaultValueTf.setText("");
+		descriptionTf.setText("");
 		filepathTf.setEditable(true);
 		
 		nameTf.setEditable(true);
@@ -543,16 +629,11 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 			filePathButton.setVisible(false);
 			filepathTf.setEditable(false);
 			//create algorithm and add it to resource handler
-			currentAlgorithm = new Algorithm(nameTf.getText(), distBox.isSelected(), filepathTf.getText(), tempParameters);
-			
-			// add arguments to algorithm
-			for (int i=0; i<tempParameters.size(); i++){
-				
-			}
+			tempAlgorithm.finalise(nameTf.getText(), distBox.isSelected(), filepathTf.getText());
 			
 			
 			
-			ResourceHandler.addAlgorithm(currentAlgorithm);
+			ResourceHandler.addAlgorithm(tempAlgorithm);
 			initialise();
 			isNewAlgorithm=false;			
 		}
@@ -579,17 +660,35 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 			blankEverything();
 		}
 		isNewAlgorithm=false;
+		isNewArgument=false;
+		argumentBox.removeAllItems();
+		saveArgument.setVisible(false);
+		savePrefix.setVisible(false);
+		saveDefaultValue.setVisible(false);
+		addArgument.setVisible(true);
+		editPrefix.setVisible(true);
+		editDescription.setVisible(true);
+		editDefaultValue.setVisible(true);
+		argumentTf.setVisible(false);
+		argumentBox.setVisible(true);
+		
+		
+		
 	}
 	
 	
 	
 	private void saveArgument(){
+		
 		if (argumentTf.getText().length()>0){
-			Parameter newParameter = new Parameter(argumentTf.getText(), prefixTf.getText(), descriptionTf.getText());
+			Parameter newParameter = new Parameter(argumentTf.getText(), prefixTf.getText(), defaultValueTf.getText(), descriptionTf.getText());
 	
 			if (isNewAlgorithm){
 				tempAlgorithm.addArgument(newParameter);
-				argumentBox.addItem(newParameter.getName());
+				//update argument box?
+				System.out.println("tempalgorithms now has "+ tempAlgorithm.getArguments().size());
+				updateArguments(tempAlgorithm);
+				isNewArgument=false;
 				
 			}
 			else{
@@ -597,9 +696,6 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 				argumentBox.addItem(newParameter.getName());
 				Main.getResourceHandler().writeAlgorithms();
 			}
-		}
-		else{
-			System.out.println("hmm");
 		}
 		
 	}
@@ -623,18 +719,12 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 				display(0);
 			}
 			else{
-				algorithmIDTf.setText("");
-				nameTf.setText("");
-				filepathTf.setText("");
-				numberTf.setText("");
+				blankEverything();
 			}
 		}
 		else{
 			totalAlgorithms=0;
-			algorithmIDTf.setText("");
-			nameTf.setText("");
-			filepathTf.setText("");
-			numberTf.setText("");
+			blankEverything();
 		}
 		totalAlg.setText(String.valueOf(totalAlgorithms));
 		nameTf.setEditable(false);
@@ -668,8 +758,10 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 		argumentBox.removeAllItems();
 		prefixTf.setText("");
 		descriptionTf.setText("");
-		defaultValue.setText("");
+		defaultValueTf.setText("");
 	}
+	
+	
 	
 	
 }

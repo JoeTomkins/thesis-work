@@ -7,31 +7,35 @@ public class DatasetGroup implements Serializable{
 	private ArrayList<Dataset> datasets;
 	private ArrayList<Algorithm> associatedAlgorithms;
 	private int id;
-	private static int totalId;
+	private transient int totalId;
 	private String name;
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	
 	public DatasetGroup(ArrayList<Dataset> dGroup, ArrayList<Algorithm> aGroup){
-		datasets = dGroup;
+		datasets = dGroup;		
 		associatedAlgorithms = aGroup;
-		this.id = totalId;
-		name = dGroup.get(0).getName();
-		totalId++;
+		Main.getResourceHandler().getCounter().addDatasetGroup();		
+		id = Main.getResourceHandler().getCounter().getDatasetGroupsNumber();
+		name = dGroup.get(0).getName();		
 	}
 	
 	
+	
 	public DatasetGroup(ArrayList<Dataset> dGroup){
-		this.id = totalId;
+		Main.getResourceHandler().getCounter().addDatasetGroup();		
+		id = Main.getResourceHandler().getCounter().getDatasetGroupsNumber();
 		name = dGroup.get(0).getName();
-		totalId++;
 		datasets = dGroup;
 		associatedAlgorithms = new ArrayList<Algorithm>();
 	}
 	
 	public DatasetGroup(Dataset[] dGroup){
-		this.id = totalId;
-		if (dGroup.length>0){name = dGroup[0].getName();};
-		totalId++;
+		Main.getResourceHandler().getCounter().addDatasetGroup();		
+		id = Main.getResourceHandler().getCounter().getDatasetGroupsNumber();
+		if (dGroup.length>0){
+			name = dGroup[0].getName();
+		}
+		
 		for(int i = 0; i < dGroup.length; i++){
 			datasets.add(dGroup[i]);
 		}
@@ -39,9 +43,12 @@ public class DatasetGroup implements Serializable{
 	}
 	
 	public DatasetGroup(Dataset[] dGroup, Algorithm[] aGroup){
-		this.id = totalId;
-		totalId++;
-		if (dGroup.length>0){name = dGroup[0].getName();}
+		Main.getResourceHandler().getCounter().addDatasetGroup();		
+		id = Main.getResourceHandler().getCounter().getDatasetGroupsNumber();
+		
+		if (dGroup.length>0){
+			name = dGroup[0].getName();
+		}
 		for(int i = 0; i < dGroup.length; i++){
 			datasets.add(dGroup[i]);
 		}
@@ -50,12 +57,17 @@ public class DatasetGroup implements Serializable{
 		}		
 	}
 	
-	public DatasetGroup(){ //dummy grouop
-		this.id = totalId;
-		System.out.println("id is " + this.id);
-		totalId++;
+	public DatasetGroup(){ //dummy group
+		System.out.println("total IDs are = " +totalId);
 		associatedAlgorithms = new ArrayList<Algorithm>();
 		datasets = new ArrayList<Dataset>();
+	}
+	
+	public void saveDatasetGroup(){
+		Main.getResourceHandler().getCounter().addDatasetGroup();		
+		id = Main.getResourceHandler().getCounter().getDatasetGroupsNumber();
+		System.out.println("id is " + this.id);
+		
 	}
 	
 	public void addAlgorithm(Algorithm alg){
@@ -79,7 +91,12 @@ public class DatasetGroup implements Serializable{
 	}
 	
 	public int getID(){
-		return id;
+		if (id != 0 ){
+			return id;
+		}
+		else{			
+			return (totalId);
+		}
 	}
 	
 	public int getNumDatasets(){

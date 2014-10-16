@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class ResourceHandler {
 	private static HadoopFilePaths fPaths; // contains filepaths to each other directories needed by the program
 	public static ResultsFile rPaths;
+	private static Counter counter;
 	private static ArrayList datasetGroups = new ArrayList();
 	private static ArrayList algorithms = new ArrayList();
 	private static ArrayList results = new ArrayList();
@@ -15,11 +16,11 @@ public class ResourceHandler {
 	private static File datasetsFp = new File("datasets.ser");
 	private static File resultsFp = new File("results.ser");
 	private static File algorithmsFp = new File("algorithms.ser");
-	
+	private static File counterFp = new File("counter.ser");
 	
 	public ResourceHandler(){
 		loadFromFiles();//initialises resources -> interacts with file handlers -
-	
+		
 	}
 	
 	
@@ -28,7 +29,7 @@ public class ResourceHandler {
 		datasets = (ArrayList) FileSetUp.getObjectListFromFile(datasetsFp);
 		results = (ArrayList) FileSetUp.getObjectListFromFile(resultsFp);
 		algorithms = (ArrayList) FileSetUp.getObjectListFromFile(algorithmsFp);
-		
+		counter = FileSetUp.getCounterFromFile(counterFp);
 	}
 	
 	
@@ -79,6 +80,8 @@ public class ResourceHandler {
 		FileSetUp.writeToFile(datasetsFp, datasets);
 	}
 	
+	
+	
 	public static void addDatasetGroup(DatasetGroup d){
 		datasetGroups.add(d);
 		FileSetUp.writeToFile(datasetGroupFp, datasetGroups);
@@ -92,6 +95,15 @@ public class ResourceHandler {
 	public static void setFPaths(HadoopFilePaths h){
 		fPaths = h;
 	}
+	
+	public Counter getCounter(){
+		return counter;
+	}
+	
+	public void writeCounter(){
+		FileSetUp.writeToFile(counterFp, counter);
+	}
+	
 	
 	public static HadoopFilePaths getFPaths(){
 		return fPaths;

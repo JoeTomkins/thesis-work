@@ -166,13 +166,13 @@ public class FileSetUp {
 		return object;
 	}
 	
-	public static Object getObjectFromFile(File filePath){
-		Object o = new Object();
+	public static Counter getCounterFromFile(File filePath){
+		Counter counter = new Counter();
 		try{
 			if (filePath.exists()){	 //file exists, there should be some stuff in there.	
 				
 				ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath));			
-				o = in.readObject();
+				counter = (Counter) in.readObject();
 				in.close();
 				
 			}
@@ -187,6 +187,28 @@ public class FileSetUp {
 			e.printStackTrace();
 		}
 		
+		return counter;
+	}
+	
+	
+	public static Object getObjectFromFile(File filePath){
+		Object o = new Object();
+		try{
+			if (filePath.exists()){	//file exists, there should be some stuff in there.
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath));	
+				o = in.readObject();
+				in.close();
+			}
+			} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
 		return o;
 	}
 	

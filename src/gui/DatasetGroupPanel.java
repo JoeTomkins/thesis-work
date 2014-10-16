@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import def.Algorithm;
 import def.Dataset;
 import def.DatasetGroup;
 import def.FileSetUp;
@@ -38,9 +39,11 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 	private JButton newGroup = new JButton("New");
 	private JButton save = new JButton("Save");
 	private JButton cancel = new JButton("Cancel");
+	private JButton delete = new JButton("Delete");
+	
 	
 	private JTextField nameT = new JTextField();
-	private JTextField idT = new JTextField(8);
+	private JTextField idT = new JTextField();
 	
 	private JComboBox datasetBox = new JComboBox();
 	private JComboBox algorithmBox = new JComboBox(); 
@@ -57,7 +60,6 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 	
 	public DatasetGroupPanel(){
 		initialise();
-		
 		GroupLayout layout = new GroupLayout(this);
 		setLayout(layout);
 		layout.setAutoCreateGaps(true);
@@ -75,6 +77,7 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 		removeDataset.addActionListener(this);
 		addAlgorithm.addActionListener(this);
 		removeAlgorithm.addActionListener(this);
+		delete.addActionListener(this);
 		cancel.addActionListener(this);
 		save.addActionListener(this);
 		nameT.setEditable(false);
@@ -86,14 +89,15 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 						.addComponent(name)
 						.addComponent(size)
 						.addComponent(algorithm)
-						.addComponent(newGroup)			
+						.addComponent(newGroup)
+						.addComponent(save)
 				)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)						
 						.addComponent(idT)
 						.addComponent(nameT)
 						.addComponent(datasetBox)
 						.addComponent(algorithmBox)
-						.addComponent(save)
+						.addComponent(delete)
 				)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(layout.createSequentialGroup()
@@ -143,6 +147,7 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 					.addComponent(newGroup)
 					.addComponent(save)
+					.addComponent(delete)
 					.addComponent(cancel)
 					.addComponent(back))
 		);
@@ -194,6 +199,9 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 		}
 		else if (e.getSource().equals(removeDataset)){
 			removeDataset();
+		}
+		else if (e.getSource().equals(delete)){
+			delete();
 		}
 		// TODO Auto-generated method stub
 		
@@ -269,6 +277,7 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 	private void save(){
 		if (tempGroup!=null){
 			if (nameT.getText().length()>0){
+				tempGroup.saveDatasetGroup();
 				tempGroup.setName(nameT.getText());
 				ResourceHandler.addDatasetGroup(tempGroup);
 				tempGroup = null;
@@ -291,6 +300,31 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 		prev.setVisible(true);
 		nameT.setEditable(false);
 		newGroup.setVisible(true);
+		if (totalDatasetGroups>0){
+			display(0);
+		}
+		else{
+			idT.setText("");
+			nameT.setText("");
+		}
+	}
+	
+	private void delete(){
+		//remove group from groups
+		datasetGroups.remove(currentDatasetGroup);
+		totalDatasetGroups--;
+		//remove from file
+		Main.getResourceHandler().writeDatasetGroups();
+		//sort out display
+		currentDatasetGroup=0;
+		if (datasetGroups.size()>0){
+			display(0);		
+		}
+		else{
+			clearAll();
+		}
+		
+		
 	}
 	
 	
@@ -309,7 +343,7 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 	private void addDatasets(){
 		File[] datasets = FileSetUp.getFiles("Select the datasets");
 		
-		if (datasets.length>0){
+		if (datasets!=null && datasets.length>0){
 			String name = JOptionPane.showInputDialog(null, "Enter Name of Datasets", datasets[0].getAbsolutePath());
 			
 			for (int i =0; i<datasets.length; i++){
@@ -331,5 +365,18 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 			updateBoxes(datasetGroups.get(currentDatasetGroup));
 		}
 	}
+	
+	private void clearAll(){
+		nameT.setText("");
+		idT.setText("");
+		if (datasetBox!=null){
+			datasetBox.removeAllItems();
+		}
+		if (algorithmBox!=null){
+			algorithmBox.removeAllItems();
+		}
+	}
+	
+	
 
 }
