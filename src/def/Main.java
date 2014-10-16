@@ -2,9 +2,8 @@ package def;
 
 import gui.MainGui;
 
+import java.sql.Date;
 import java.util.ArrayList;
-
-
 
 public class Main {
 	private static ResourceHandler resourceHandler;
@@ -24,6 +23,8 @@ public class Main {
 	public static ResourceHandler getResourceHandler(){
 		return resourceHandler;
 	}
+	
+	
 	
 	public static void testFunction(){
 		System.out.println("Number of DatasetGroups = " + resourceHandler.getDatasetGroups().size());

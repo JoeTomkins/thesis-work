@@ -25,6 +25,8 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 	private JLabel id = new JLabel("ID");
 	private JLabel size = new JLabel("Dataset");
 	private JLabel algorithm = new JLabel("Algorithms");
+	private JLabel datasetGroupNum = new JLabel("DatasetGroup #");
+	
 	
 	private JButton newDatasetGroup = new JButton("New");
 	private JButton removeDataset = new JButton("Remove");
@@ -41,10 +43,11 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 	private JButton cancel = new JButton("Cancel");
 	private JButton delete = new JButton("Delete");
 	
-	
 	private JTextField nameT = new JTextField();
 	private JTextField idT = new JTextField();
-	
+	private JTextField datasetGroupT = new JTextField();
+	private JLabel outOf = new JLabel("/");
+	private JTextField datasetGroupTotal = new JTextField();
 	private JComboBox datasetBox = new JComboBox();
 	private JComboBox algorithmBox = new JComboBox(); 
 	
@@ -82,9 +85,11 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 		save.addActionListener(this);
 		nameT.setEditable(false);
 		idT.setEditable(false);
-		
+		datasetGroupT.setEditable(false);
+		datasetGroupTotal.setEditable(false);
 		layout.setHorizontalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+						.addComponent(datasetGroupNum)
 						.addComponent(id)
 						.addComponent(name)
 						.addComponent(size)
@@ -92,7 +97,12 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 						.addComponent(newGroup)
 						.addComponent(save)
 				)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)						
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+						.addGroup(layout.createSequentialGroup()
+								.addComponent(datasetGroupT)
+								.addComponent(outOf)
+								.addComponent(datasetGroupTotal))
+						
 						.addComponent(idT)
 						.addComponent(nameT)
 						.addComponent(datasetBox)
@@ -121,11 +131,17 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 		
 		layout.setVerticalGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-						.addComponent(id)
-						.addComponent(idT)
+						.addComponent(datasetGroupNum)
+						.addComponent(datasetGroupT)
+						.addComponent(outOf)
+						.addComponent(datasetGroupTotal)
 						.addComponent(prev)
 						
 						.addComponent(next)
+				)
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+						.addComponent(id)
+						.addComponent(idT)
 				)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 						.addComponent(name)
@@ -213,7 +229,8 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 		datasetGroups = Main.getResourceHandler().getDatasetGroups();
 		totalDatasetGroups = datasetGroups.size();
 		if (datasetGroups!=null && totalDatasetGroups>0){
-			display(0);			
+			datasetGroupTotal.setText(String.valueOf(totalDatasetGroups));
+			display(0);
 		}
 		
 
@@ -222,7 +239,7 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 	private void display(int index){
 		datasetBox.removeAllItems();
 		algorithmBox.removeAllItems();
-		
+		datasetGroupT.setText(String.valueOf(index+1));
 		nameT.setText(((DatasetGroup) datasetGroups.get(index)).getName());
 		idT.setText(String.valueOf(((DatasetGroup) datasetGroups.get(index)).getID()));
 		
@@ -264,10 +281,11 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 		tempGroup = new DatasetGroup();
 		save.setVisible(true);
 		cancel.setVisible(true);
+		delete.setVisible(false);
 		next.setVisible(false);
 		prev.setVisible(false);
 		currentDatasetGroup = tempGroup.getID();
-		idT.setText(String.valueOf(currentDatasetGroup));
+		idT.setText("");
 		nameT.setEditable(true);
 		nameT.setText("");
 		
@@ -283,11 +301,14 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 				tempGroup = null;
 				save.setVisible(false);
 				cancel.setVisible(false);
+				delete.setVisible(true);
 				next.setVisible(true);
 				prev.setVisible(true);
 				nameT.setEditable(false);
 				newGroup.setVisible(true);
 				totalDatasetGroups++;
+
+				datasetGroupTotal.setText(String.valueOf(totalDatasetGroups));
 			}
 		}
 		
@@ -296,6 +317,7 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 	private void cancel(){
 		save.setVisible(false);
 		cancel.setVisible(false);
+		delete.setVisible(true);
 		next.setVisible(true);
 		prev.setVisible(true);
 		nameT.setEditable(false);
@@ -311,16 +333,25 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 	
 	private void delete(){
 		//remove group from groups
-		datasetGroups.remove(currentDatasetGroup);
-		totalDatasetGroups--;
-		//remove from file
-		Main.getResourceHandler().writeDatasetGroups();
-		//sort out display
-		currentDatasetGroup=0;
-		if (datasetGroups.size()>0){
-			display(0);		
+		
+		if (totalDatasetGroups>1){
+			datasetGroups.remove(currentDatasetGroup);
+			totalDatasetGroups--;
+			//remove from file
+			Main.getResourceHandler().writeDatasetGroups();
+			//sort out display
+			currentDatasetGroup=0;
+			datasetGroupTotal.setText("totalDatasetGroups");
+			display(0);
 		}
-		else{
+		else if (totalDatasetGroups==1){
+			datasetGroups.remove(currentDatasetGroup);
+			totalDatasetGroups--;
+			datasetGroupTotal.setText("totalDatasetGroups");
+			//remove from file
+			Main.getResourceHandler().writeDatasetGroups();
+			//sort out display
+			currentDatasetGroup=0;
 			clearAll();
 		}
 		

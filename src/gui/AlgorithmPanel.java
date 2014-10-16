@@ -28,7 +28,7 @@ import def.ResourceHandler;
 
 public class AlgorithmPanel extends JPanel implements ActionListener{
 	
-	private static final AbstractButton idTf = null;
+	
 	JLabel number = new JLabel("Algorithm #");
 	JLabel total = new JLabel(" / ");
 	JLabel name = new JLabel("Name:");
@@ -616,6 +616,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 		next.setVisible(false);
 		prev.setVisible(false);	
 	}
+	
 	private void save(){
 		if (nameTf.getText().length()>0 && filepathTf.getText().length()>0){
 			
