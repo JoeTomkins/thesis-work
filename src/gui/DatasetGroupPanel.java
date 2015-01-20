@@ -297,7 +297,7 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 			if (nameT.getText().length()>0){
 				tempGroup.saveDatasetGroup();
 				tempGroup.setName(nameT.getText());
-				ResourceHandler.addDatasetGroup(tempGroup);
+				Main.getResourceHandler().addDatasetGroup(tempGroup);
 				tempGroup = null;
 				save.setVisible(false);
 				cancel.setVisible(false);
@@ -365,7 +365,7 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 		int saveDataset = JOptionPane.showConfirmDialog(null, "Save this Dataset to Group: ");
 		if (saveDataset == JOptionPane.YES_OPTION){
 			Dataset d = new Dataset(name, f.getAbsolutePath(), f.length());
-			ResourceHandler.addDatasetToGroup(currentDatasetGroup,d);
+			Main.getResourceHandler().addDatasetToGroup(currentDatasetGroup,d);
 			display(currentDatasetGroup);
 			//add dataset to datasetGroup
 		}
@@ -380,8 +380,8 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 			for (int i =0; i<datasets.length; i++){
 				Dataset temp = new Dataset(name, datasets[i].getAbsolutePath(), datasets[i].length());
 				//datasetGroups.get(currentDatasetGroup).addDataset(temp);
-				ResourceHandler.addDataset(temp);
-				ResourceHandler.addDatasetToGroup(currentDatasetGroup,  temp);
+				Main.getResourceHandler().addDataset(temp);
+				Main.getResourceHandler().addDatasetToGroup(currentDatasetGroup,  temp);
 			}
 			updateBoxes(datasetGroups.get(currentDatasetGroup));			
 		}		
@@ -392,7 +392,7 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 			System.out.println("datasetBox size is:" + datasetBox.getItemCount());
 			System.out.println("selected index is "+ datasetBox.getSelectedIndex());
 			int choice = datasetBox.getSelectedIndex();
-			ResourceHandler.removeDatasetFromGroup(choice, currentDatasetGroup);
+			Main.getResourceHandler().removeDatasetFromGroup(choice, currentDatasetGroup);
 			updateBoxes(datasetGroups.get(currentDatasetGroup));
 		}
 	}

@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import def.Dataset;
 import def.DatasetGroup;
 import def.FileSetUp;
+import def.Main;
 import def.ResourceHandler;
 
 public class DandAPanel implements ActionListener{
@@ -167,7 +168,7 @@ public class DandAPanel implements ActionListener{
 	}
 	
 	private void initialise(){
-		datasetGroups = ResourceHandler.getDatasetGroups();
+		datasetGroups = Main.getResourceHandler().getDatasetGroups();
 		if (datasetGroups!=null){
 			totalGroups = datasetGroups.size();
 			if (totalGroups>0){

@@ -436,7 +436,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 		
 		else if (e.getSource().equals(delete)){
 			if (totalAlgorithms>0){
-				ResourceHandler.removeAlgorithm(currentAlgNum);
+				Main.getResourceHandler().removeAlgorithm(currentAlgNum);
 				
 				initialise();
 			}
@@ -634,7 +634,7 @@ public class AlgorithmPanel extends JPanel implements ActionListener{
 			
 			
 			
-			ResourceHandler.addAlgorithm(tempAlgorithm);
+			Main.getResourceHandler().addAlgorithm(tempAlgorithm);
 			initialise();
 			isNewAlgorithm=false;			
 		}

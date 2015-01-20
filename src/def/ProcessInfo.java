@@ -1,11 +1,21 @@
 package def;
+/**
+ *  Code designed to hold information on processes that have been created
+ * @author Joe Tomkins
+ *
+ */
 
 public class ProcessInfo {
 	Algorithm algorithm;
 	Dataset dataset;
 	HadoopConfiguration hadConf;
+	int exitStatus;
 	
-	public ProcessInfo(){
+	public ProcessInfo(Algorithm alg, Dataset dataset, HadoopConfiguration hadoopConf, int exitStatus){
+		this.algorithm = alg;
+		this.dataset = dataset;
+		this.hadConf = hadoopConf;
+		this.exitStatus = exitStatus;
 		
 	}
 	

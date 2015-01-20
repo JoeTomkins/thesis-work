@@ -32,10 +32,9 @@ public class HadoopConfigFile {
 			
 			currentConfig = (HadoopConfiguration) FileSetUp.getObjectFromFile(filePath);
 			
-			System.out.println(currentConfig.getClass());
-			System.out.println(currentConfig.getName(0));
+			
 			if (currentConfig == null){	
-				System.out.println("asdf asdf is null");
+				System.out.println("current hadoop config is null");
 			}
 		}
 		
@@ -117,7 +116,7 @@ public class HadoopConfigFile {
 			for (int j = 0; j< properties[1].length; j++){				
 				if (properties[0][j].equals("io.file.buffer.size")){
 					currentConfig.setValue(11, properties[1][j]);
-					System.out.println("switch");
+					
 					break;
 				}
 			}
@@ -130,7 +129,7 @@ public class HadoopConfigFile {
 				
 				if (properties[0][j].equals(currentConfig.getName(i))){
 					currentConfig.setValue(i, properties[1][j]);
-					System.out.println("switch");
+					
 					break;
 				}
 			}
@@ -144,7 +143,7 @@ public class HadoopConfigFile {
 				
 				if (properties[0][j].equals(currentConfig.getName(i))){
 					currentConfig.setValue(i, properties[1][j]);
-					System.out.println("switch");
+					
 					break;
 				}
 			}

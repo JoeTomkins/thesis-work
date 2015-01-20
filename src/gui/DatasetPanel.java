@@ -84,6 +84,9 @@ public class DatasetPanel extends JPanel implements ActionListener{
 				.addComponent(deleteDataset)
 				.addComponent(back))
 		);
+		nameT.setEditable(false);
+		sizeT.setEditable(false);
+		filePathT.setEditable(false);
 		initialise();
 	}
 	

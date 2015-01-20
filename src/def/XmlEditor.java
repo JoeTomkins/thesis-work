@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -18,6 +19,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 	public class XmlEditor {
+		
+		private String[][] configList;		
+		private int totalNumElements;	
+		
 		
 		static String[][] readXmlFromFile(String file){
 			Document doc;
@@ -58,12 +63,71 @@ import org.xml.sax.SAXException;
 			} 	
 			return fileProp;
 		}		
-		private String[][] configList;
-		
-		
-		
-		private int totalNumElements;		
-		
+			
+		void modify(String file, String[] nodeName, String[] newValue){
+			Document doc = null;
+			DocumentBuilderFactory dFac=null;
+			DocumentBuilder docBuilder=null;
+			NodeList properties;
+			NodeList propElements;
+			int numElements = 0;
+			try{
+				//get file paths object from file
+				dFac = DocumentBuilderFactory.newInstance();
+				docBuilder = dFac.newDocumentBuilder();
+				//want to read from the 3 files - and take what properties they have, will resize the array as properties are added - could use arrayList
+				doc = docBuilder.parse(file);
+				properties= doc.getElementsByTagName("property"); //node list of all properties
+				numElements=properties.getLength();
+				
+				 
+				
+				for (int i=0; i < numElements; i++){
+					propElements = properties.item(i).getChildNodes(); // get name/value of property (immediate children)
+					System.out.println("...");
+					for (int j=0; j< propElements.getLength(); j++){
+						for (int k=0; k<nodeName.length; k++){
+							if (propElements.item(j).getNodeName().equals(nodeName[k])){
+								System.out.println("match");
+								propElements.item(j).setTextContent(newValue[k]);
+							}
+						}
+					}
+					System.out.println("...");
+					
+					
+					//adds all names and values to their respective lists.
+				}										
+			}catch (ParserConfigurationException pce){
+				pce.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			
+			// write to file
+			
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = null;
+			try {
+				transformer = transformerFactory.newTransformer();
+			} catch (TransformerConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(file));
+			try {
+				transformer.transform(source, result);
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}	
 		
 		
 		
@@ -82,6 +146,7 @@ import org.xml.sax.SAXException;
 				e1.printStackTrace();
 			}
 			//want to read from the 3 files - and take what properties they have, will resize the array as properties are added - could use arrayList
+			// UPDATE decided that the function should just take in the file as an argument.
 			try {
 				doc = docBuilder.parse(new File(file));
 			} catch (SAXException e) {
@@ -102,6 +167,8 @@ import org.xml.sax.SAXException;
 			Element prop = doc.createElement("property");
 			prop.appendChild(nm);
 			prop.appendChild(val);
+			
+			// property is the parent of name & value. 
 			doc.getDocumentElement().appendChild(prop);
 			
 			
@@ -209,8 +276,7 @@ import org.xml.sax.SAXException;
 						}
 				}
 				
-				//properties.item(index).removeChild(properties.item(index).getFirstChild());
-				//properties.item(index).removeChild(properties.item(index).getFirstChild());
+				
 			}
 			//need to update the two arrays with updated values -> resize without the array in the index
 			String[][] tmpList = new String[2][totalNumElements-1];

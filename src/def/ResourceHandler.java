@@ -33,66 +33,66 @@ public class ResourceHandler {
 	}
 	
 	
-	public static void setDatasetGroups(ArrayList dGroups){
+	public void setDatasetGroups(ArrayList dGroups){
 		System.out.println("--------------------setting datasetGroups");
 		datasetGroups= dGroups;
 	}
-	public static void setAlgs(ArrayList<Algorithm> aGroups){
+	public void setAlgs(ArrayList<Algorithm> aGroups){
 		algorithms = aGroups;
 	}
-	public static void setResults(ArrayList<Result> rGroups){
+	public void setResults(ArrayList<Result> rGroups){
 		results = rGroups;
 	}
 	
-	public static void setDatasets(ArrayList<Dataset> dGroups){
+	public void setDatasets(ArrayList<Dataset> dGroups){
 		datasets = dGroups;
 	}
 	
-	public static void addDatasetToGroup(int index, Dataset d){
+	public void addDatasetToGroup(int index, Dataset d){
 		
 		((DatasetGroup) datasetGroups.get(index)).addDataset(d);
 		writeDatasetGroups();
 	}
 	
-	public static ArrayList getDatasetGroups(){
+	public ArrayList getDatasetGroups(){
 		return datasetGroups;
 	}
 	
-	public static ArrayList getDatasets(){
+	public ArrayList getDatasets(){
 		return datasets;
 	}
 	
-	public static  ArrayList getAlgorithms(){
+	public ArrayList getAlgorithms(){
 		return algorithms;
 	}
 	
-	public static ArrayList getResults(){
+	public ArrayList getResults(){
 		return results;
 	}
 	
-	public static void addResult(Result r){
+	public void addResult(Result r){
 		results.add(r);
 		FileSetUp.writeToFile(resultsFp, results);
 	}
 	
-	public static void addDataset(Dataset d){
+	public void addDataset(Dataset d){
 		datasets.add(d);
 		FileSetUp.writeToFile(datasetsFp, datasets);
 	}
 	
 	
 	
-	public static void addDatasetGroup(DatasetGroup d){
+	public void addDatasetGroup(DatasetGroup d){
 		datasetGroups.add(d);
 		FileSetUp.writeToFile(datasetGroupFp, datasetGroups);
 	}
 	
-	public static void addAlgorithm(Algorithm a){
+	public void addAlgorithm(Algorithm a){
 		algorithms.add(a);
 		FileSetUp.writeToFile(algorithmsFp, algorithms);
 	}	
 	
-	public static void setFPaths(HadoopFilePaths h){
+	public void setFPaths(HadoopFilePaths h){
 		fPaths = h;
 	}
 	
@@ -105,49 +105,49 @@ public class ResourceHandler {
 	}
 	
 	
-	public static HadoopFilePaths getFPaths(){
+	public HadoopFilePaths getFPaths(){
 		return fPaths;
 	}
 	
-	public static void removeDataset(int index){
+	public void removeDataset(int index){
 		datasets.remove(index);
 		FileSetUp.writeToFile(datasetsFp, datasets);
 	}
 	
-	public static void removeDatasetFromGroup(int indexD, int indexG){
+	public void removeDatasetFromGroup(int indexD, int indexG){
 		((DatasetGroup) datasetGroups.get(indexG)).removeDataset(indexD);
 		FileSetUp.writeToFile(datasetGroupFp, datasetGroups);
 	}
 	
 	
-	public static void removeDatasetGroup(int index){
+	public void removeDatasetGroup(int index){
 		datasetGroups.remove(index);
 		FileSetUp.writeToFile(datasetGroupFp, datasetGroups);
 	}
 	
-	public static void removeAlgorithm(int index){
+	public void removeAlgorithm(int index){
 		algorithms.remove(index);
 		FileSetUp.writeToFile(algorithmsFp, algorithms);
 	}
 	
-	public static void removeResult(int index){
+	public void removeResult(int index){
 		results.remove(index);
 		FileSetUp.writeToFile(resultsFp, results);
 	}
 	
-	public static void writeDatasetGroups(){
+	public void writeDatasetGroups(){
 		FileSetUp.writeToFile(datasetGroupFp, datasetGroups);
 	}
 	
-	public static void writeAlgorithms(){
+	public void writeAlgorithms(){
 		FileSetUp.writeToFile(algorithmsFp, algorithms);
 	}
 	
-	public static void writeDatasets(){
+	public void writeDatasets(){
 		FileSetUp.writeToFile(datasetsFp, datasets);
 	}
 	
-	public static void writeResults(){
+	public void writeResults(){
 		FileSetUp.writeToFile(resultsFp, results);
 	}
 	

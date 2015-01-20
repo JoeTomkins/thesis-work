@@ -3,7 +3,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 public class Result implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private transient static int totalResults;
 	private int resultNumber; //effectively Id
 	private Algorithm algo;
 	private Double cTime; //how much time taken
@@ -50,11 +49,7 @@ public class Result implements Serializable{
 		
 		public int getResultNumber(){
 			return resultNumber;
-		}
-		
-		public int getTotalResults(){
-			return totalResults;
-		}
+		}		
 		
 		public Double getTime(){
 			return cTime;
