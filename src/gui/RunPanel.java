@@ -59,7 +59,7 @@ public class RunPanel implements ActionListener{
 		
 		
 		algorithmB.addActionListener(this);
-		algPanel = new AlgorithmPanel(true);
+		algPanel = new AlgorithmPanel();
 		dataPanel = new DataPanel();
 		cards.add(runPanel, "RUNPANEL");
 		cards.add(algPanel, "ALGPANEL");

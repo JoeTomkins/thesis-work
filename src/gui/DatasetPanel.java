@@ -1,22 +1,27 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import def.Dataset;
 import def.FileSetUp;
 import def.Main;
 
 public class DatasetPanel extends JPanel implements ActionListener{
+	
+	
 	private JLabel id = new JLabel("ID");
 	
 	private JLabel name = new JLabel("Name");
@@ -26,7 +31,6 @@ public class DatasetPanel extends JPanel implements ActionListener{
 	private JButton deleteDataset = new JButton("Delete");
 	private JButton prev = new JButton("<");
 	private JButton next = new JButton(">");
-	private JButton back = new JButton("Return");
 	private JButton choosefilePath = new JButton("_");
 	private JTextField nameT = new JTextField();
 	private JTextField sizeT = new JTextField();
@@ -36,13 +40,17 @@ public class DatasetPanel extends JPanel implements ActionListener{
 	private int totalDatasets;
 	
 	public DatasetPanel(){
+		Border blackline = BorderFactory.createLineBorder(Color.black);
+		Border paneEdge = BorderFactory.createTitledBorder(blackline, "datasetPanel");
+		
+		this.setBorder(paneEdge);
+		//BorderFactory.createLineBorder(Color.black));
 		GroupLayout layout = new GroupLayout(this);
 		setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 		prev.addActionListener(this);
 		next.addActionListener(this);
-		back.addActionListener(this);
 		newDataset.addActionListener(this);
 		deleteDataset.addActionListener(this);
 		choosefilePath.addActionListener(this);
@@ -60,7 +68,7 @@ public class DatasetPanel extends JPanel implements ActionListener{
 					.addComponent(sizeT)
 					.addComponent(filePathT))
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(back)
+						
 						.addGroup(layout.createSequentialGroup()							
 							.addComponent(prev)
 							.addComponent(next))
@@ -81,8 +89,7 @@ public class DatasetPanel extends JPanel implements ActionListener{
 				.addComponent(filePathT))
 			.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 				.addComponent(newDataset)
-				.addComponent(deleteDataset)
-				.addComponent(back))
+				.addComponent(deleteDataset))
 		);
 		nameT.setEditable(false);
 		sizeT.setEditable(false);
@@ -92,10 +99,8 @@ public class DatasetPanel extends JPanel implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(back)){
-			DandAPanel.setPanel("FRONTPANEL");
-		}
-		else if (e.getSource().equals(newDataset)){
+		
+		if (e.getSource().equals(newDataset)){
 			newDataset();
 		}
 		else if (e.getSource().equals(prev)){

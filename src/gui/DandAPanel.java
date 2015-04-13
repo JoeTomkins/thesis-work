@@ -2,11 +2,13 @@ package gui;
 
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -16,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import def.Dataset;
 import def.DatasetGroup;
@@ -23,20 +26,19 @@ import def.FileSetUp;
 import def.Main;
 import def.ResourceHandler;
 
-public class DandAPanel implements ActionListener{
-	private static JPanel cards;
+public class DandAPanel{
+	
 	private JPanel frontPanel;
 	private JPanel datasetPanel;
 	private JPanel algPanel;
 	private JPanel datasetGroupPanel;
-	private JPanel bottom;
-	
+	private JPanel mainPanel;
 	
 	
 	private JLabel datasetsL = new JLabel("Datasets");
 	private JLabel datasetGroupL = new JLabel ("Dataset Group");
 	private JLabel algorithmsL = new JLabel("Associated Algorithms");
-	
+
 	private JLabel distributedL = new JLabel("Distributed");
 	
 	private JCheckBox distributed = new JCheckBox();
@@ -48,9 +50,6 @@ public class DandAPanel implements ActionListener{
 	
 	private JButton prev = new JButton("<");
 	private JButton next = new JButton(">");
-	private JButton datasetButton = new JButton("View/Create Dataset");
-	private JButton datasetGroupButton = new JButton("Create/Edit DatasetGroup");
-	private JButton algorithmButton = new JButton("View/Create Algorithms");
 	
 	private ArrayList<DatasetGroup> datasetGroups;
 	private int currentGroup;
@@ -59,62 +58,44 @@ public class DandAPanel implements ActionListener{
 	 * @param args
 	 */
 	public DandAPanel(){
-		cards = new JPanel(new CardLayout());
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		
 		
 		datasetPanel = new DatasetPanel();
-		algPanel = new AlgorithmPanel(false);
+		algPanel = new AlgorithmPanel();
 		datasetGroupPanel = new DatasetGroupPanel();
-		frontPanel = new JPanel();
-		frontPanel.add(frontPanel());
-		frontPanel.setLayout(new BoxLayout(frontPanel, BoxLayout.Y_AXIS));
+		frontPanel = frontPanel();
 		
-		bottom = new JPanel();
+
 		
 		
-		bottom.add(datasetButton);
-		bottom.add(datasetGroupButton);
-		bottom.add(algorithmButton);
-		datasetButton.addActionListener(this);
-		datasetGroupButton.addActionListener(this);
-		algorithmButton.addActionListener(this);
 		
 		
-		frontPanel.add(bottom);
-		cards.add(frontPanel, "FRONTPANEL");
-		cards.add(datasetPanel, "DATASETPANEL");
-		cards.add(algPanel, "ALGPANEL");
-		cards.add(datasetGroupPanel, "DATASETGROUPPANEL");
+		mainPanel.add(frontPanel, "FRONTPANEL");
+		mainPanel.add(datasetPanel, "DATASETPANEL");
+		mainPanel.add(algPanel, "ALGPANEL");
+		mainPanel.add(datasetGroupPanel, "DATASETGROUPPANEL");
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(datasetButton)){
-			setPanel("DATASETPANEL");
-		}
-		else if (e.getSource().equals(datasetGroupButton)){
-			setPanel("DATASETGROUPPANEL");
-		}
-		else if (e.getSource().equals(algorithmButton)){
-			setPanel("ALGPANEL");
-		}
-	}
 	
-	public static void setPanel(String panel){
-		CardLayout cl = (CardLayout)(cards.getLayout());
-		cl.show(cards, panel);
-	}
+	
+	
 	
 	public JPanel getPanel(){
-		return cards;
+		return mainPanel;
 	}
 	
 	
 	private JPanel frontPanel(){
 		
 		
-		JPanel panel = new JPanel();
-		GroupLayout layout = new GroupLayout(panel);
-		panel.setLayout(layout);
+		JPanel mainPanel = new JPanel();
+		GroupLayout layout = new GroupLayout(mainPanel);
+		Border blackline = BorderFactory.createLineBorder(Color.black);
+		Border paneEdge = BorderFactory.createTitledBorder(blackline, "Main Panel");
+		mainPanel.setBorder(paneEdge);
+		mainPanel.setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 		layout.setHorizontalGroup(layout.createSequentialGroup()
@@ -159,12 +140,9 @@ public class DandAPanel implements ActionListener{
 		);
 		
 		
-		datasetsBox.addActionListener(this);		
-		prev.addActionListener(this);
-		next.addActionListener(this);
 		distributed.setEnabled(false);
 		initialise();
-		return panel;
+		return mainPanel;
 	}
 	
 	private void initialise(){
@@ -217,6 +195,15 @@ public class DandAPanel implements ActionListener{
 	}
 	
 	private void addExistingAlgorithm(){
+		
+	}
+
+
+
+
+
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 

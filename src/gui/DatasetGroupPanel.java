@@ -1,10 +1,12 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -12,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import def.Algorithm;
 import def.Dataset;
@@ -36,7 +39,6 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 	private JButton removeAlgorithm = new JButton("Remove");
 	private JButton prev = new JButton("<");
 	private JButton next = new JButton(">");
-	private JButton back = new JButton("Return");
 	private JButton choosefilePath = new JButton("_");
 	private JButton newGroup = new JButton("New");
 	private JButton save = new JButton("Save");
@@ -62,6 +64,10 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 	
 	
 	public DatasetGroupPanel(){
+		Border blackline = BorderFactory.createLineBorder(Color.black);
+		Border paneEdge = BorderFactory.createTitledBorder(blackline, "Dataset Group Panel");
+		
+		this.setBorder(paneEdge);
 		initialise();
 		GroupLayout layout = new GroupLayout(this);
 		setLayout(layout);
@@ -71,7 +77,6 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 		//add actionlisteners to components
 		prev.addActionListener(this);
 		next.addActionListener(this);
-		back.addActionListener(this);
 		newDatasetGroup.addActionListener(this);
 		choosefilePath.addActionListener(this);	
 		newGroup.addActionListener(this);
@@ -125,7 +130,6 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 						
 						.addComponent(addNewDataset)
-						.addComponent(back)
 				)						
 		);
 		
@@ -164,8 +168,7 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 					.addComponent(newGroup)
 					.addComponent(save)
 					.addComponent(delete)
-					.addComponent(cancel)
-					.addComponent(back))
+					.addComponent(cancel))
 		);
 		
 		save.setVisible(false);
@@ -198,9 +201,7 @@ public class DatasetGroupPanel extends JPanel implements ActionListener{
 				}
 			}
 		}
-		else if (e.getSource().equals(back)){
-			DandAPanel.setPanel("FRONTPANEL");
-		}
+		
 		else if (e.getSource().equals(cancel)){
 			cancel();
 		}

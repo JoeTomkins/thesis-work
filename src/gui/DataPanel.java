@@ -1,9 +1,11 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -11,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 
 import def.DatasetGroup;
 import def.Main;
@@ -29,6 +32,12 @@ public class DataPanel extends JPanel implements ActionListener{
 	private int chosenDatasetGroup;
 	
 	public DataPanel(){
+		Border blackline = BorderFactory.createLineBorder(Color.black);
+		Border paneEdge = BorderFactory.createTitledBorder(blackline, "Main Panel");
+		
+		this.setBorder(paneEdge);
+		
+		
 		GroupLayout layout = new GroupLayout(this);
 		setLayout(layout);
 		layout.setAutoCreateGaps(true);
